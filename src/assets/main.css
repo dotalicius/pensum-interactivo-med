@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './base.css';
+
+/* Estilos personalizados para la aplicación */
+.subject-card-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.subject-card-hover {
+  @apply hover:shadow-lg hover:scale-105;
+}
+
+.status-pending {
+  @apply bg-gray-100 border-gray-300 text-gray-600;
+}
+
+.status-regular {
+  @apply bg-yellow-100 border-yellow-300 text-yellow-800;
+}
+
+.status-approved {
+  @apply bg-green-100 border-green-300 text-green-800;
+}
+
+.status-disabled {
+  @apply bg-red-50 border-red-200 text-red-400 opacity-60;
+}
+
+/* Animaciones personalizadas */
+.progress-bar {
+  @apply transition-all duration-1000 ease-out;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+}
