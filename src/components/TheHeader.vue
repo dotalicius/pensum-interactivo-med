@@ -8,10 +8,10 @@
             <GraduationCap class="w-8 h-8 text-blue-600" />
           </div>
           <div class="ml-3">
-            <h1 class="text-xl font-bold text-gray-900">
+            <h1 class="text-lg font-bold text-gray-900">
               Pensum Interactivo
             </h1>
-            <p class="text-sm text-gray-600">
+            <p class="text-xs text-gray-600">
               Medicina - UNLP
             </p>
           </div>
@@ -48,8 +48,8 @@
 
           <!-- Sección de Cafecito -->
           <div class="flex items-center space-x-2">
-            <span class="text-sm text-gray-600 font-medium">
-              Si te gusta, apóyame con un cafecito
+            <span class="text-xs text-gray-600 font-medium">
+              Si te gustó, apóyame con un cafecito
             </span>
             <ArrowRight class="w-4 h-4 text-gray-500" />
             <a
@@ -63,13 +63,7 @@
             </a>
           </div>
 
-          <!-- Menú móvil -->
-          <button
-            @click="showMobileMenu = !showMobileMenu"
-            class="md:hidden text-gray-500 hover:text-gray-700 transition-colors duration-200"
-          >
-            <Menu class="w-6 h-6" />
-          </button>
+          
         </div>
       </div>
 
