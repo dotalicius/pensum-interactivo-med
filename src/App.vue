@@ -2,18 +2,23 @@
 import { RouterView } from 'vue-router'
 import TheHeader from '@/components/TheHeader.vue'
 import SubjectModal from '@/components/SubjectModal.vue'
-</script>
+import HelpButton from '@/components/HelpButton.vue'
+import { Analytics } from '@vercel/analytics/vue';</script>
 
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Header principal -->
     <TheHeader />
-    
+    <!-- Analytics -->
+    <Analytics />
     <!-- Contenido principal -->
     <RouterView />
     
     <!-- Modal de materias -->
     <SubjectModal />
+    
+    <!-- Botón flotante de ayuda -->
+    <HelpButton />
   </div>
 </template>
 

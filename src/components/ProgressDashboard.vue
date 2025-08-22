@@ -42,7 +42,7 @@
     </div>
 
     <!-- Estadísticas en cards -->
-    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-7 gap-4 mb-6">
       <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
         <div class="flex items-center justify-between">
           <div>
@@ -98,9 +98,18 @@
           <div>
             <p class="text-2xl font-bold" :class="pfoTextClasses">{{ stats.completedOptionalHours }}</p>
             <p class="text-sm" :class="pfoTextClasses">Horas Optativas</p>
-            <p class="text-xs" :class="pfoSubtextClasses">{{ stats.requiredOptionalHours }} requeridas</p>
           </div>
           <GraduationCap :class="pfoIconClasses" class="w-8 h-8" />
+        </div>
+      </div>
+
+      <div :class="pfoCardClasses" class="p-4 rounded-lg border">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-2xl font-bold" :class="pfoTextClasses">{{ approvedOptionalSubjects }}</p>
+            <p class="text-sm" :class="pfoTextClasses">Materias Optativas Aprobadas</p>
+          </div>
+          <BookOpen :class="pfoIconClasses" class="w-12 h-12" />
         </div>
       </div>
     </div>
@@ -128,6 +137,33 @@
             <span class="text-gray-600">{{ stats.completedOptionalHours }}h completadas</span>
             <span class="text-gray-600">{{ stats.requiredOptionalHours }}h requeridas</span>
             <span class="text-gray-600">{{ stats.totalOptionalHours }}h disponibles</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de requisitos PFO -->
+    <div class="mb-6">
+      <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200">
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0 p-2 bg-amber-100 rounded-lg">
+            <GraduationCap class="w-5 h-5 text-amber-600" />
+          </div>
+          <div>
+            <h4 class="font-medium text-amber-800 mb-2">Requisitos para PFO (Práctica Final Obligatoria)</h4>
+            <div class="space-y-2 text-sm text-amber-700">
+              <div class="flex items-center space-x-2">
+                <div :class="stats.approvedSubjects >= 40 ? 'bg-green-500' : 'bg-amber-400'" class="w-3 h-3 rounded-full"></div>
+                <span>Materias obligatorias aprobadas: {{ stats.approvedSubjects }}/40 </span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div :class="stats.completedOptionalHours >= stats.requiredOptionalHours ? 'bg-green-500' : 'bg-amber-400'" class="w-3 h-3 rounded-full"></div>
+                <span>Horas optativas: {{ stats.completedOptionalHours }}/{{ stats.requiredOptionalHours }}h</span>
+              </div>
+            </div>
+            <p class="text-xs text-amber-600 mt-2">
+              <strong>Nota:</strong> Ambos requisitos deben cumplirse para acceder al PFO
+            </p>
           </div>
         </div>
       </div>
@@ -229,7 +265,8 @@ const yearProgress = computed(() => {
   const years = [1, 2, 3, 4, 5, 6]
   
   return years.map(year => {
-    const yearSubjects = store.subjects.filter(s => s.year === year)
+    // Filtrar materias del año excluyendo las optativas
+    const yearSubjects = store.subjects.filter(s => s.year === year && s.modality !== 'optional')
     const approvedInYear = yearSubjects.filter(s => s.status === 'approved').length
     const totalInYear = yearSubjects.length
     
@@ -279,10 +316,25 @@ const motivationalMessage = computed(() => {
 })
 
 const availableSubjects = computed(() => {
+  // Solo mostrar materias obligatorias disponibles para cursar
+  return store.subjects.filter(subject => {
+    // Excluir la PFO si no se cumplen los requisitos especiales
+    if (subject.name === "Práctica Final Obligatoria (PFO)" && !stats.value.canAccessPFO) {
+      return false
+    }
+    
+    return subject.status === 'pending' && 
+           subject.modality !== 'optional' &&
+           store.canEnrollInSubject(subject.id)
+  }).sort((a, b) => a.year - b.year)
+})
+
+const approvedOptionalSubjects = computed(() => {
+  // Contar materias optativas aprobadas
   return store.subjects.filter(subject => 
-    subject.status === 'pending' && 
-    store.canEnrollInSubject(subject.id)
-  ).sort((a, b) => a.year - b.year)
+    subject.status === 'approved' && 
+    subject.modality === 'optional'
+  ).length
 })
 
 // Computed para horas optativas
@@ -295,8 +347,19 @@ const pfoStatusText = computed(() => {
   if (stats.value.canAccessPFO) {
     return 'Habilitado para PFO'
   } else {
-    const remaining = stats.value.requiredOptionalHours - stats.value.completedOptionalHours
-    return `Faltan ${remaining}h para PFO`
+    // Verificar qué requisito falta
+    const mandatoryRequirementMet = stats.value.approvedSubjects >= 40
+    const hoursRequirementMet = stats.value.completedOptionalHours >= stats.value.requiredOptionalHours
+    
+    if (!mandatoryRequirementMet && !hoursRequirementMet) {
+      return 'Faltan materias obligatorias y horas optativas para la PFO'
+    } else if (!mandatoryRequirementMet) {
+      const remaining = 40 - stats.value.approvedSubjects
+      return `Faltan ${remaining} materias obligatorias`
+    } else {
+      const remaining = stats.value.requiredOptionalHours - stats.value.completedOptionalHours
+      return `Faltan ${remaining}h optativas`
+    }
   }
 })
 

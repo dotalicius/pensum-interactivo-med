@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @import './base.css';
+
 
 /* Estilos personalizados para la aplicación */
 .subject-card-transition {

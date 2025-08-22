@@ -46,9 +46,12 @@
             <RotateCcw class="w-5 h-5" />
           </button>
 
-          <!-- Enlaces de contacto -->
-          <div class="flex items-center space-x-3">
-            <!-- Enlace de Cafecito -->
+          <!-- Sección de Cafecito -->
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-600 font-medium">
+              Si te gusta, apóyame con un cafecito
+            </span>
+            <ArrowRight class="w-4 h-4 text-gray-500" />
             <a
               href="https://cafecito.app/dotalicius"
               target="_blank"
@@ -56,18 +59,7 @@
               class="flex items-center text-orange-600 hover:text-orange-700 transition-colors duration-200"
               title="Apoyar en Cafecito"
             >
-              <Coffee class="w-5 h-5 mr-1" />
-              <span class="text-sm font-medium hidden sm:inline">Cafecito</span>
-            </a>
-
-            <!-- Enlace de contacto -->
-            <a
-              href="mailto:jesusestebanchavez@gmail.com"
-              class="flex items-center text-blue-600 hover:text-blue-700 transition-colors duration-200"
-              title="Contactar"
-            >
-              <Mail class="w-5 h-5 mr-1" />
-              <span class="text-sm font-medium hidden sm:inline">Contacto</span>
+              <Coffee class="w-5 h-5" />
             </a>
           </div>
 
@@ -146,10 +138,10 @@ import { ref } from 'vue'
 import { 
   GraduationCap, 
   Coffee, 
-  Mail, 
   Menu, 
   RotateCcw, 
-  AlertTriangle 
+  AlertTriangle,
+  ArrowRight
 } from 'lucide-vue-next'
 import { useCurriculumStore } from '@/stores/curriculum'
 

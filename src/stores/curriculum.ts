@@ -50,14 +50,25 @@ export const useCurriculumStore = defineStore('curriculum', () => {
     subjects.value.filter(subject => subject.status === 'pending')
   )
 
+  // Materias obligatorias (excluyendo optativas)
+  const mandatorySubjects = computed(() => 
+    subjects.value.filter(subject => subject.modality !== 'optional')
+  )
+
+  const approvedMandatorySubjects = computed(() => 
+    mandatorySubjects.value.filter(subject => subject.status === 'approved')
+  )
+
   const completionPercentage = computed(() => {
-    const total = subjects.value.length
-    const approved = approvedSubjects.value.length
+    // Solo considerar materias obligatorias para el progreso general (incluyendo la PFO)
+    const total = mandatorySubjects.value.length
+    const approved = approvedMandatorySubjects.value.length
     return total > 0 ? Math.round((approved / total) * 100) : 0
   })
 
   const overallAverage = computed(() => {
-    const approvedWithGrades = approvedSubjects.value.filter(
+    // Solo considerar materias obligatorias aprobadas con notas para el promedio
+    const approvedWithGrades = approvedMandatorySubjects.value.filter(
       subject => subject.details.finalGrade !== null
     )
     
@@ -91,20 +102,33 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   })
 
   const canAccessPFO = computed(() => {
-    return completedOptionalHours.value >= REQUIRED_OPTIONAL_HOURS
+    // PFO se desbloquea solo cuando se cumplen AMBOS requisitos:
+    // 1. 40 materias obligatorias aprobadas (excluyendo la PFO)
+    // 2. 270 horas de optativas cursadas
+    const mandatoryWithoutPFO = mandatorySubjects.value.filter(subject => subject.name !== "Práctica Final Obligatoria (PFO)")
+    const approvedWithoutPFO = approvedMandatorySubjects.value.filter(subject => subject.name !== "Práctica Final Obligatoria (PFO)")
+    
+    const requiredApproved = approvedWithoutPFO.length >= 40
+    const hoursRequirementMet = completedOptionalHours.value >= REQUIRED_OPTIONAL_HOURS
+    
+    return requiredApproved && hoursRequirementMet
   })
 
   const totalCursedHours = computed(() => {
+    // Solo considerar horas de materias obligatorias
     return subjects.value
-      .filter(subject => subject.status === 'approved' || subject.status === 'regular')
+      .filter(subject => 
+        (subject.status === 'approved' || subject.status === 'regular') && 
+        subject.modality !== 'optional'
+      )
       .reduce((total, subject) => total + subject.hours, 0)
   })
 
   const progressStats = computed((): ProgressStats => ({
-    totalSubjects: subjects.value.length,
-    approvedSubjects: approvedSubjects.value.length,
-    regularSubjects: regularSubjects.value.length,
-    pendingSubjects: pendingSubjects.value.length,
+    totalSubjects: mandatorySubjects.value.filter(s => s.name !== "Práctica Final Obligatoria (PFO)").length, // Solo materias obligatorias excluyendo PFO
+    approvedSubjects: approvedMandatorySubjects.value.filter(s => s.name !== "Práctica Final Obligatoria (PFO)").length, // Solo materias obligatorias aprobadas excluyendo PFO
+    regularSubjects: regularSubjects.value.filter(s => s.modality !== 'optional').length, // Solo materias obligatorias regulares
+    pendingSubjects: pendingSubjects.value.filter(s => s.modality !== 'optional').length, // Solo materias obligatorias pendientes
     completionPercentage: completionPercentage.value,
     overallAverage: overallAverage.value,
     totalOptionalHours: totalOptionalHours.value,
@@ -115,7 +139,8 @@ export const useCurriculumStore = defineStore('curriculum', () => {
   }))
 
   const subjectsByYear = computed(() => {
-    const grouped = subjects.value.reduce((acc, subject) => {
+    // Solo agrupar materias obligatorias por año
+    const grouped = mandatorySubjects.value.reduce((acc, subject) => {
       if (!acc[subject.year]) {
         acc[subject.year] = []
       }
@@ -269,6 +294,8 @@ export const useCurriculumStore = defineStore('curriculum', () => {
     regularSubjects,
     pendingSubjects,
     optionalSubjects,
+    mandatorySubjects,
+    approvedMandatorySubjects,
     completionPercentage,
     overallAverage,
     selectedSubject,

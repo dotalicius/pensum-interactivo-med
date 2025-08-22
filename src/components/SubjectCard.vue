@@ -46,6 +46,25 @@
       </div>
     </div>
 
+    <!-- Requisitos especiales para PFO -->
+    <div v-if="subject.name === 'Práctica Final Obligatoria (PFO)'" class="mb-3">
+      <p class="text-xs text-gray-500 mb-1">Requisitos especiales:</p>
+      <div class="space-y-1">
+        <div class="text-xs bg-amber-50 px-2 py-1 rounded border border-amber-200">
+          <span class="font-medium">40 materias obligatorias aprobadas</span>
+          <span :class="store.progressStats.approvedSubjects >= 40 ? 'text-green-600' : 'text-red-600'" class="ml-1">
+            ({{ store.progressStats.approvedSubjects }}/40)
+          </span>
+        </div>
+        <div class="text-xs bg-amber-50 px-2 py-1 rounded border border-amber-200">
+          <span class="font-medium">Mínimo 270h de optativas</span>
+          <span :class="store.progressStats.completedOptionalHours >= store.progressStats.requiredOptionalHours ? 'text-green-600' : 'text-red-600'" class="ml-1">
+            ({{ store.progressStats.completedOptionalHours }}/{{ store.progressStats.requiredOptionalHours }}h)
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- Calificación final si está aprobada -->
     <div v-if="subject.status === 'approved' && subject.details.finalGrade" class="mb-3">
       <div class="flex items-center space-x-2">
@@ -99,7 +118,7 @@
     </div>
 
     <!-- Indicador de disponibilidad -->
-    <div v-if="!canEnroll && subject.status === 'pending'" class="mt-2">
+    <div v-if="!canEnroll && subject.status === 'pending' && subject.name !== 'Práctica Final Obligatoria (PFO)'" class="mt-2">
       <div class="flex items-center space-x-1">
         <Lock class="w-3 h-3 text-red-500" />
         <span class="text-xs text-red-600">No disponible por correlativas</span>
@@ -123,7 +142,13 @@ const props = defineProps<Props>()
 const store = useCurriculumStore()
 
 // Computed properties
-const canEnroll = computed(() => store.canEnrollInSubject(props.subject.id))
+const canEnroll = computed(() => {
+  // Verificar requisitos especiales para PFO
+  if (props.subject.name === "Práctica Final Obligatoria (PFO)") {
+    return store.progressStats.canAccessPFO
+  }
+  return store.canEnrollInSubject(props.subject.id)
+})
 const canTakeFinal = computed(() => store.canTakeFinalExam(props.subject.id))
 
 const hasPrerequisites = computed(() => 

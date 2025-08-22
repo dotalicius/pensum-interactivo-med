@@ -72,7 +72,7 @@
     </div>
 
     <!-- Estadísticas rápidas -->
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
       <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
         <p class="text-2xl font-bold text-blue-600">{{ filteredSubjects.length }}</p>
         <p class="text-sm text-gray-600">Materias mostradas</p>
@@ -88,6 +88,10 @@
       <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
         <p class="text-2xl font-bold text-gray-600">{{ pendingCount }}</p>
         <p class="text-sm text-gray-600">Pendientes</p>
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
+        <p class="text-2xl font-bold text-orange-600">{{ pendingOptionalCount }}</p>
+        <p class="text-sm text-gray-600">Optativas pendientes</p>
       </div>
       <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
         <p class="text-2xl font-bold text-purple-600">{{ totalHours }}</p>
@@ -137,7 +141,7 @@
     <!-- Leyenda -->
     <div class="mt-8 bg-gray-50 p-4 rounded-lg">
       <h4 class="font-semibold text-gray-800 mb-3">Leyenda de Estados</h4>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
           <span>Pendiente: No cursada aún</span>
@@ -149,6 +153,10 @@
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
           <span>Aprobada: Final rendido</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-4 h-4 bg-orange-100 border border-orange-300 rounded"></div>
+          <span>Optativa: Materia electiva</span>
         </div>
       </div>
     </div>
@@ -224,7 +232,13 @@ const regularCount = computed(() =>
 )
 
 const pendingCount = computed(() => 
-  filteredSubjects.value.filter(s => s.status === 'pending').length
+  // Solo contar materias obligatorias pendientes
+  filteredSubjects.value.filter(s => s.status === 'pending' && s.modality !== 'optional').length
+)
+
+const pendingOptionalCount = computed(() => 
+  // Contar materias optativas pendientes
+  filteredSubjects.value.filter(s => s.status === 'pending' && s.modality === 'optional').length
 )
 
 const totalHours = computed(() => 
