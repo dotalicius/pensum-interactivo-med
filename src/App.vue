@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import TheHeader from '@/components/TheHeader.vue'
 import SubjectModal from '@/components/SubjectModal.vue'
 import HelpButton from '@/components/HelpButton.vue'
+import CurriculumTour from '@/components/CurriculumTour.vue'
 import { Analytics } from '@vercel/analytics/vue';</script>
 
 <template>
@@ -19,6 +20,9 @@ import { Analytics } from '@vercel/analytics/vue';</script>
     
     <!-- Botón flotante de ayuda -->
     <HelpButton />
+    
+    <!-- Botón flotante del tour -->
+    <CurriculumTour />
   </div>
 </template>
 
