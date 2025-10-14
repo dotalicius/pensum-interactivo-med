@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "middleware.js",
+      "use": "@vercel/edge"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/middleware.js"
+    }
+  ],
+  "functions": {
+    "middleware.js": {
+      "runtime": "edge"
+    }
+  }
+}
