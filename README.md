@@ -49,7 +49,7 @@ El Pensum Interactivo te permite:
 
 ## Soporte
 
-Para reportar problemas o sugerir mejoras, contacta al desarrollador.
+Para reportar problemas o sugerir mejoras, contacta al desarrollador mediante los links en la página del proyecto.
 
 ## Apoyo
 
