@@ -11,26 +11,28 @@
         <span class="text-sm font-medium text-gray-700">Progreso General</span>
         <span class="text-sm font-bold text-blue-600">{{ stats.completionPercentage }}%</span>
       </div>
-      
+
       <div class="relative">
         <!-- Barra de progreso -->
         <div class="w-full bg-gray-200 rounded-full h-8 overflow-hidden">
-          <div 
+          <div
             :style="{ width: stats.completionPercentage + '%' }"
             class="progress-bar h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full relative"
           >
             <!-- Personaje animado -->
-            <div 
+            <div
               v-if="stats.completionPercentage > 5"
               class="absolute right-1 top-1/2 transform -translate-y-1/2"
             >
-              <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center animate-bounce-gentle">
+              <div
+                class="w-6 h-6 bg-white rounded-full flex items-center justify-center animate-bounce-gentle"
+              >
                 <User class="w-3 h-3 text-blue-600" />
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Marcadores de años -->
         <div class="flex justify-between mt-2 text-xs text-gray-500">
           <span v-for="year in 6" :key="year" class="flex flex-col items-center">
@@ -43,7 +45,9 @@
 
     <!-- Estadísticas en cards -->
     <div class="grid grid-cols-2 md:grid-cols-7 gap-4 mb-6">
-      <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+      <div
+        class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-2xl font-bold text-green-700">{{ stats.approvedSubjects }}</p>
@@ -53,7 +57,9 @@
         </div>
       </div>
 
-      <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg border border-yellow-200">
+      <div
+        class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg border border-yellow-200"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-2xl font-bold text-yellow-700">{{ stats.regularSubjects }}</p>
@@ -83,7 +89,9 @@
         </div>
       </div>
 
-      <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg border border-indigo-200">
+      <div
+        class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg border border-indigo-200"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-2xl font-bold text-indigo-700">{{ stats.totalCursedHours }}h</p>
@@ -96,7 +104,9 @@
       <div :class="pfoCardClasses" class="p-4 rounded-lg border">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-2xl font-bold" :class="pfoTextClasses">{{ stats.completedOptionalHours }}</p>
+            <p class="text-2xl font-bold" :class="pfoTextClasses">
+              {{ stats.completedOptionalHours }}
+            </p>
             <p class="text-sm" :class="pfoTextClasses">Horas Optativas</p>
           </div>
           <GraduationCap :class="pfoIconClasses" class="w-8 h-8" />
@@ -119,23 +129,35 @@
       <div class="bg-white p-4 rounded-lg border">
         <div class="flex items-center justify-between mb-2">
           <h3 class="font-medium text-gray-800">Progreso de Horas Optativas</h3>
-          <span :class="pfoStatusBadgeClasses" class="px-2 py-1 rounded-full text-sm font-medium">
+          <span
+            v-if="stats.requiredOptionalHours > 0"
+            :class="pfoStatusBadgeClasses"
+            class="px-2 py-1 rounded-full text-sm font-medium"
+          >
             {{ pfoStatusText }}
           </span>
+          <span
+            v-else
+            class="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1 rounded-full text-sm font-medium"
+          >
+            Progreso de horas optativas no definido
+          </span>
         </div>
-        
+
         <div class="relative">
           <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-            <div 
+            <div
               :style="{ width: optionalHoursPercentage + '%' }"
-              :class="optionalHoursBarClasses"
+              :class="stats.requiredOptionalHours > 0 ? optionalHoursBarClasses : 'bg-gray-400'"
               class="h-full rounded-full progress-bar"
             ></div>
           </div>
-          
+
           <div class="flex justify-between mt-2 text-sm">
             <span class="text-gray-600">{{ stats.completedOptionalHours }}h completadas</span>
-            <span class="text-gray-600">{{ stats.requiredOptionalHours }}h requeridas</span>
+            <span v-if="stats.requiredOptionalHours > 0" class="text-gray-600"
+              >{{ stats.requiredOptionalHours }}h requeridas</span
+            >
             <span class="text-gray-600">{{ stats.totalOptionalHours }}h disponibles</span>
           </div>
         </div>
@@ -143,26 +165,73 @@
     </div>
 
     <!-- Información de requisitos PFO -->
-    <div class="mb-6">
-      <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200">
+    <div v-if="store.currentCareer.pfoStatus === 'none'" class="mb-6">
+      <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0 p-2 bg-slate-100 rounded-lg">
+            <Info class="w-5 h-5 text-slate-500" />
+          </div>
+          <div>
+            <h4 class="font-medium text-slate-800 mb-1">Práctica Final Obligatoria (PFO)</h4>
+            <p class="text-sm text-slate-600">
+              Esta carrera no requiere la realización de una Práctica Final Obligatoria (PFO).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="mb-6">
+      <div
+        class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200"
+      >
         <div class="flex items-start space-x-3">
           <div class="flex-shrink-0 p-2 bg-amber-100 rounded-lg">
             <GraduationCap class="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h4 class="font-medium text-amber-800 mb-2">Requisitos para PFO (Práctica Final Obligatoria)</h4>
+            <h4 class="font-medium text-amber-800 mb-2">
+              Requisitos para PFO (Práctica Final Obligatoria)
+            </h4>
             <div class="space-y-2 text-sm text-amber-700">
               <div class="flex items-center space-x-2">
-                <div :class="stats.approvedSubjects >= 40 ? 'bg-green-500' : 'bg-amber-400'" class="w-3 h-3 rounded-full"></div>
-                <span>Materias obligatorias aprobadas: {{ stats.approvedSubjects }}/40 </span>
+                <div
+                  :class="
+                    stats.approvedSubjects >= stats.totalSubjects ? 'bg-green-500' : 'bg-amber-400'
+                  "
+                  class="w-3 h-3 rounded-full"
+                ></div>
+                <span
+                  >Materias obligatorias aprobadas: {{ stats.approvedSubjects }}/{{
+                    stats.totalSubjects
+                  }}
+                </span>
               </div>
-              <div class="flex items-center space-x-2">
-                <div :class="stats.completedOptionalHours >= stats.requiredOptionalHours ? 'bg-green-500' : 'bg-amber-400'" class="w-3 h-3 rounded-full"></div>
-                <span>Horas optativas: {{ stats.completedOptionalHours }}/{{ stats.requiredOptionalHours }}h</span>
+              <div v-if="stats.requiredOptionalHours > 0" class="flex items-center space-x-2">
+                <div
+                  :class="
+                    stats.completedOptionalHours >= stats.requiredOptionalHours
+                      ? 'bg-green-500'
+                      : 'bg-amber-400'
+                  "
+                  class="w-3 h-3 rounded-full"
+                ></div>
+                <span
+                  >Horas optativas: {{ stats.completedOptionalHours }}/{{
+                    stats.requiredOptionalHours
+                  }}h</span
+                >
+              </div>
+              <div v-else class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                <span class="text-amber-800/80">Progreso de horas optativas no definido</span>
               </div>
             </div>
-            <p class="text-xs text-amber-600 mt-2">
+            <p v-if="stats.requiredOptionalHours > 0" class="text-xs text-amber-600 mt-2">
               <strong>Nota:</strong> Ambos requisitos deben cumplirse para acceder al PFO
+            </p>
+            <p v-else class="text-xs text-amber-600 mt-2">
+              <strong>Nota:</strong> Deben cumplirse las materias obligatorias para acceder al PFO
             </p>
           </div>
         </div>
@@ -173,8 +242,8 @@
     <div class="mb-6">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">Progreso por Año</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div 
-          v-for="yearData in yearProgress" 
+        <div
+          v-for="yearData in yearProgress"
           :key="yearData.year"
           class="bg-gray-50 p-4 rounded-lg border"
         >
@@ -182,15 +251,15 @@
             <h4 class="font-medium text-gray-800">{{ yearData.year }}° Año</h4>
             <span class="text-sm text-gray-600">{{ yearData.approved }}/{{ yearData.total }}</span>
           </div>
-          
+
           <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
-            <div 
+            <div
               :style="{ width: yearData.percentage + '%' }"
               :class="getYearColorClass(yearData.year)"
               class="h-2 rounded-full progress-bar"
             ></div>
           </div>
-          
+
           <p class="text-xs text-gray-600">{{ yearData.percentage }}% completado</p>
         </div>
       </div>
@@ -214,8 +283,8 @@
         Próximas Materias Disponibles
       </h3>
       <div class="space-y-2">
-        <div 
-          v-for="subject in availableSubjects.slice(0, 3)" 
+        <div
+          v-for="subject in availableSubjects.slice(0, 3)"
           :key="subject.id"
           class="flex items-center justify-between bg-green-50 p-3 rounded-lg border border-green-200"
         >
@@ -223,7 +292,7 @@
             <p class="font-medium text-green-800">{{ subject.name }}</p>
             <p class="text-sm text-green-600">{{ subject.year }}° Año</p>
           </div>
-          <button 
+          <button
             @click="store.updateSubjectStatus(subject.id, 'regular')"
             class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
           >
@@ -237,16 +306,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { 
-  TrendingUp, 
-  CheckCircle, 
-  Clock, 
-  BookOpen, 
-  Award, 
+import {
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  BookOpen,
+  Award,
   User,
   Sparkles,
   Target,
-  GraduationCap
+  GraduationCap,
+  Info,
 } from 'lucide-vue-next'
 import { useCurriculumStore } from '@/stores/curriculum'
 
@@ -256,91 +326,105 @@ const store = useCurriculumStore()
 const stats = computed(() => store.progressStats)
 
 const formattedAverage = computed(() => {
-  return stats.value.overallAverage > 0 
-    ? stats.value.overallAverage.toFixed(2) 
-    : '--'
+  return stats.value.overallAverage > 0 ? stats.value.overallAverage.toFixed(2) : '--'
 })
 
 const yearProgress = computed(() => {
   const years = [1, 2, 3, 4, 5, 6]
-  
-  return years.map(year => {
-    // Filtrar materias del año excluyendo las optativas
-    const yearSubjects = store.subjects.filter(s => s.year === year && s.modality !== 'optional')
-    const approvedInYear = yearSubjects.filter(s => s.status === 'approved').length
-    const totalInYear = yearSubjects.length
-    
-    return {
-      year,
-      approved: approvedInYear,
-      total: totalInYear,
-      percentage: totalInYear > 0 ? Math.round((approvedInYear / totalInYear) * 100) : 0
-    }
-  }).filter(yearData => yearData.total > 0) // Solo mostrar años que tienen materias
+
+  return years
+    .map((year) => {
+      // Filtrar materias del año excluyendo las optativas
+      const yearSubjects = store.subjects.filter(
+        (s) => s.year === year && s.modality !== 'optional',
+      )
+      const approvedInYear = yearSubjects.filter((s) => s.status === 'approved').length
+      const totalInYear = yearSubjects.length
+
+      return {
+        year,
+        approved: approvedInYear,
+        total: totalInYear,
+        percentage: totalInYear > 0 ? Math.round((approvedInYear / totalInYear) * 100) : 0,
+      }
+    })
+    .filter((yearData) => yearData.total > 0) // Solo mostrar años que tienen materias
 })
 
 const motivationalMessage = computed(() => {
   const percentage = stats.value.completionPercentage
-  
+
   if (percentage === 0) {
     return {
-      title: "¡Comienza tu journey!",
-      text: "Todo gran médico comenzó con el primer paso. ¡Empieza a regularizar materias!"
+      title: '¡Comienza tu aventura!',
+      text: 'Todo gran médico comenzó con el primer paso. ¡Empieza a regularizar materias!',
     }
   } else if (percentage < 25) {
     return {
-      title: "¡Excelente comienzo!",
-      text: "Has dado los primeros pasos importantes. Mantén el ritmo y sigue adelante."
+      title: '¡Excelente comienzo!',
+      text: 'Has dado los primeros pasos importantes. Mantén el ritmo y sigue adelante.',
     }
   } else if (percentage < 50) {
     return {
-      title: "¡Vas por buen camino!",
-      text: "Has completado una cuarta parte de tu carrera. La constancia es la clave del éxito."
+      title: '¡Vas por buen camino!',
+      text: 'Has completado una cuarta parte de tu carrera. La constancia es la clave del éxito.',
     }
   } else if (percentage < 75) {
     return {
-      title: "¡Más de la mitad!",
-      text: "¡Increíble progreso! Ya puedes ver la meta más cerca. No aflojes ahora."
+      title: '¡Más de la mitad!',
+      text: '¡Increíble progreso! Ya puedes ver la meta más cerca. No aflojes ahora.',
     }
   } else if (percentage < 100) {
     return {
-      title: "¡Casi en la meta!",
-      text: "Estás en la recta final. Cada materia que apruebes te acerca más a ser médico."
+      title: '¡Casi en la meta!',
+      text: 'Estás en la recta final. Cada materia que apruebes te acerca más a ser médico.',
     }
   } else {
     return {
-      title: "¡Felicitaciones, Doctor!",
-      text: "Has completado tu carrera. ¡Es hora de ayudar a sanar el mundo!"
+      title: '¡Felicitaciones, Doctor!',
+      text: 'Has completado tu carrera. ¡Es hora de ayudar a sanar el mundo!',
     }
   }
 })
 
 const availableSubjects = computed(() => {
   // Solo mostrar materias obligatorias disponibles para cursar
-  return store.subjects.filter(subject => {
-    // Excluir la PFO si no se cumplen los requisitos especiales
-    if (subject.name === "Práctica Final Obligatoria (PFO)" && !stats.value.canAccessPFO) {
-      return false
-    }
-    
-    return subject.status === 'pending' && 
-           subject.modality !== 'optional' &&
-           store.canEnrollInSubject(subject.id)
-  }).sort((a, b) => a.year - b.year)
+  return store.subjects
+    .filter((subject) => {
+      // Excluir la PFO si no se cumplen los requisitos especiales
+      if (subject.name === 'Práctica Final Obligatoria (PFO)' && !stats.value.canAccessPFO) {
+        return false
+      }
+
+      return (
+        subject.status === 'pending' &&
+        subject.modality !== 'optional' &&
+        store.canEnrollInSubject(subject.id)
+      )
+    })
+    .sort((a, b) => a.year - b.year)
 })
 
 const approvedOptionalSubjects = computed(() => {
   // Contar materias optativas aprobadas
-  return store.subjects.filter(subject => 
-    subject.status === 'approved' && 
-    subject.modality === 'optional'
+  return store.subjects.filter(
+    (subject) => subject.status === 'approved' && subject.modality === 'optional',
   ).length
 })
 
 // Computed para horas optativas
 const optionalHoursPercentage = computed(() => {
-  if (stats.value.requiredOptionalHours === 0) return 0
-  return Math.min(100, Math.round((stats.value.completedOptionalHours / stats.value.requiredOptionalHours) * 100))
+  if (stats.value.requiredOptionalHours === 0) {
+    if (stats.value.totalOptionalHours === 0) return 0
+    return Math.min(
+      100,
+      Math.round((stats.value.completedOptionalHours / stats.value.totalOptionalHours) * 100),
+    )
+  }
+  return Math.min(
+    100,
+    Math.round((stats.value.completedOptionalHours / stats.value.requiredOptionalHours) * 100),
+  )
 })
 
 const pfoStatusText = computed(() => {
@@ -348,13 +432,14 @@ const pfoStatusText = computed(() => {
     return 'Habilitado para PFO'
   } else {
     // Verificar qué requisito falta
-    const mandatoryRequirementMet = stats.value.approvedSubjects >= 40
-    const hoursRequirementMet = stats.value.completedOptionalHours >= stats.value.requiredOptionalHours
-    
+    const mandatoryRequirementMet = stats.value.approvedSubjects >= stats.value.totalSubjects
+    const hoursRequirementMet =
+      stats.value.completedOptionalHours >= stats.value.requiredOptionalHours
+
     if (!mandatoryRequirementMet && !hoursRequirementMet) {
       return 'Faltan materias obligatorias y horas optativas para la PFO'
     } else if (!mandatoryRequirementMet) {
-      const remaining = 40 - stats.value.approvedSubjects
+      const remaining = stats.value.totalSubjects - stats.value.approvedSubjects
       return `Faltan ${remaining} materias obligatorias`
     } else {
       const remaining = stats.value.requiredOptionalHours - stats.value.completedOptionalHours
@@ -402,24 +487,24 @@ const optionalHoursBarClasses = computed(() => {
 // Methods
 const getYearColorClass = (year: number): string => {
   const colors = [
-    'bg-blue-500',    // 1er año
-    'bg-green-500',   // 2do año  
-    'bg-purple-500',  // 3er año
-    'bg-orange-500',  // 4to año
-    'bg-red-500',     // 5to año
-    'bg-indigo-500'   // 6to año
+    'bg-blue-500', // 1er año
+    'bg-green-500', // 2do año
+    'bg-purple-500', // 3er año
+    'bg-orange-500', // 4to año
+    'bg-red-500', // 5to año
+    'bg-indigo-500', // 6to año
   ]
-  
+
   return colors[(year - 1) % colors.length] || 'bg-gray-500'
 }
 
 const getYearProgressClass = (year: number): string => {
-  const yearData = yearProgress.value.find(y => y.year === year)
-  
+  const yearData = yearProgress.value.find((y) => y.year === year)
+
   if (!yearData || yearData.total === 0) {
     return 'bg-gray-300'
   }
-  
+
   if (yearData.percentage === 100) {
     return 'bg-green-500'
   } else if (yearData.percentage > 0) {
@@ -440,7 +525,8 @@ const getYearProgressClass = (year: number): string => {
 }
 
 @keyframes bounceGentle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
