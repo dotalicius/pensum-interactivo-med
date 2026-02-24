@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "src/api/block-regions.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -54,12 +49,6 @@
       "source": "/home",
       "destination": "/",
       "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/block-regions",
-      "destination": "/src/api/block-regions.js"
     }
   ]
 }
