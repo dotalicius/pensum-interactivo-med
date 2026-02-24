@@ -1,10 +1,6 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="store.isModalOpen && store.selectedSubject"
-      class="modal-overlay"
-      @click.self="closeModal"
-    >
+    <div v-if="store.isModalOpen && store.selectedSubject" class="modal-overlay">
       <div class="modal-content animate-slide-up">
         <form @submit.prevent="saveDetails">
           <!-- Header del modal -->
