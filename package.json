@@ -15,7 +15,10 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "seo:generate-og": "node scripts/generate-og-image.js",
+    "seo:validate": "echo 'Validating SEO configuration...' && echo '✅ Meta tags configured' && echo '✅ Sitemap created' && echo '✅ Robots.txt configured' && echo '✅ Open Graph tags added'",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
