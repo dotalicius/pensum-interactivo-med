@@ -3,7 +3,9 @@ import { RouterView } from 'vue-router'
 import TheHeader from '@/components/TheHeader.vue'
 import SubjectModal from '@/components/SubjectModal.vue'
 import HelpButton from '@/components/HelpButton.vue'
-import { Analytics } from '@vercel/analytics/vue';</script>
+import UpdateNotificationModal from '@/components/UpdateNotificationModal.vue'
+import { Analytics } from '@vercel/analytics/vue'
+</script>
 
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
@@ -13,10 +15,13 @@ import { Analytics } from '@vercel/analytics/vue';</script>
     <Analytics />
     <!-- Contenido principal -->
     <RouterView />
-    
+
     <!-- Modal de materias -->
     <SubjectModal />
-    
+
+    <!-- Modal de actualización -->
+    <UpdateNotificationModal />
+
     <!-- Botón flotante de ayuda -->
     <HelpButton />
   </div>
@@ -34,9 +39,9 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -71,7 +76,10 @@ body {
 
 /* Transiciones globales */
 * {
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Clases de utilidad adicionales */

@@ -2,20 +2,12 @@
   <header class="bg-white shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo y título -->
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <GraduationCap class="w-8 h-8 text-blue-600" />
-          </div>
-          <div class="ml-3">
-            <h1 class="text-lg font-bold text-gray-900">
-              Pensum Interactivo
-            </h1>
-            <p class="text-xs text-gray-600">
-              Medicina - UNLP
-            </p>
-          </div>
-        </div>
+        <!-- Selector de carrera -->
+        <CareerSelector
+          :careers="allCareers"
+          :currentCareer="store.currentCareer"
+          @select="store.switchCareer"
+        />
 
         <!-- Navegación central -->
         <nav class="hidden md:flex space-x-8">
@@ -36,7 +28,34 @@
         </nav>
 
         <!-- Acciones del usuario -->
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <!-- WhatsApp Contact Button -->
+          <a
+            href="https://wa.link/4p01lc"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:flex items-center text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200"
+            title="Contactar al desarrollador"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-1.5"
+            >
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+              ></path>
+            </svg>
+            Contacto
+          </a>
+
           <!-- Botón de reset -->
           <button
             @click="showResetConfirmation = true"
@@ -48,22 +67,20 @@
 
           <!-- Sección de Cafecito -->
           <div class="flex items-center space-x-2">
-            <span class="text-xs text-gray-600 font-medium">
-              Si te gustó, apóyame con un cafecito
+            <span class="hidden md:inline text-xs text-gray-600 font-medium">
+              Apóyame con un cafecito
             </span>
-            <ArrowRight class="w-4 h-4 text-gray-500" />
             <a
               href="https://cafecito.app/dotalicius"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center text-orange-600 hover:text-orange-700 transition-colors duration-200"
+              class="flex items-center text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 p-1.5 sm:px-3 sm:py-1.5 rounded-full sm:text-sm sm:font-medium transition-colors duration-200"
               title="Apoyar en Cafecito"
             >
-              <Coffee class="w-5 h-5" />
+              <Coffee class="w-5 h-5 sm:mr-1.5" />
+              <span class="hidden sm:inline">Cafecito</span>
             </a>
           </div>
-
-          
         </div>
       </div>
 
@@ -72,17 +89,41 @@
         <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
           <a
             href="#dashboard"
-            @click="scrollToSection('dashboard'); showMobileMenu = false"
+            @click="handleMenuClick('dashboard')"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
           >
             Mi Progreso
           </a>
           <a
             href="#curriculum"
-            @click="scrollToSection('curriculum'); showMobileMenu = false"
+            @click="handleMenuClick('curriculum')"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
           >
             Plan de Estudios
+          </a>
+          <a
+            href="https://wa.link/4p01lc"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="sm:hidden flex items-center px-3 py-2 rounded-md text-base font-medium text-green-700 hover:text-green-800 hover:bg-green-50 transition-colors duration-200"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2"
+            >
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+              ></path>
+            </svg>
+            Contactar por WhatsApp
           </a>
         </div>
       </div>
@@ -98,15 +139,14 @@
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
           <div class="flex items-center mb-4">
             <AlertTriangle class="w-6 h-6 text-red-500 mr-3" />
-            <h3 class="text-lg font-semibold text-gray-900">
-              Confirmar Reinicio
-            </h3>
+            <h3 class="text-lg font-semibold text-gray-900">Confirmar Reinicio</h3>
           </div>
-          
+
           <p class="text-gray-600 mb-6">
-            ¿Estás seguro de que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.
+            ¿Estás seguro de que quieres reiniciar todo tu progreso? Esta acción no se puede
+            deshacer.
           </p>
-          
+
           <div class="flex items-center justify-end space-x-3">
             <button
               @click="showResetConfirmation = false"
@@ -129,15 +169,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { 
-  GraduationCap, 
-  Coffee, 
-  Menu, 
-  RotateCcw, 
-  AlertTriangle,
-  ArrowRight
-} from 'lucide-vue-next'
+import { Coffee, RotateCcw, AlertTriangle } from 'lucide-vue-next'
 import { useCurriculumStore } from '@/stores/curriculum'
+import CareerSelector from '@/components/molecules/CareerSelector.vue'
+import { allCareers } from '@/data/careers'
 
 const store = useCurriculumStore()
 
@@ -149,17 +184,22 @@ const showResetConfirmation = ref(false)
 const scrollToSection = (sectionId: string) => {
   const element = document.getElementById(sectionId)
   if (element) {
-    element.scrollIntoView({ 
+    element.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     })
   }
+}
+
+const handleMenuClick = (sectionId: string) => {
+  scrollToSection(sectionId)
+  showMobileMenu.value = false
 }
 
 const handleReset = () => {
   store.resetCurriculum()
   showResetConfirmation.value = false
-  
+
   // Opcional: Mostrar notificación de éxito
   console.log('Progreso reiniciado exitosamente')
 }

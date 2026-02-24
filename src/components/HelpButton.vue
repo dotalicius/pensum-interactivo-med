@@ -16,23 +16,23 @@ const helpContent = [
   {
     icon: BookOpen,
     title: 'Navegación del Plan de Estudios',
-    description: 'Explora las materias por semestre y revisa los requisitos de cada una.'
+    description: 'Explora las materias por semestre y revisa los requisitos de cada una.',
   },
   {
     icon: GraduationCap,
     title: 'Progreso Académico',
-    description: 'Visualiza tu avance en el plan de estudios y las materias completadas.'
+    description: 'Visualiza tu avance en el plan de estudios y las materias completadas.',
   },
   {
     icon: Calendar,
     title: 'Carga Horaria',
-    description: 'Consulta la distribución de horas por materia y semestre.'
+    description: 'Consulta la distribución de horas por materia y semestre.',
   },
   {
     icon: BarChart3,
     title: 'Dashboard de Progreso',
-    description: 'Monitorea tu rendimiento académico con estadísticas detalladas.'
-  }
+    description: 'Monitorea tu rendimiento académico con estadísticas detalladas.',
+  },
 ]
 </script>
 
@@ -74,13 +74,25 @@ const helpContent = [
 
       <!-- Contenido de ayuda -->
       <div class="p-6">
-                 <div class="text-gray-600 mb-6 text-lg space-y-2">
-             <p>Bienvenido al Pensum Interactivo para la carrera de Medicina en la UNLP.</p>
-             <p>Esta pagina es solo una herramienta para que organices tu pensum de una forma mas interactiva y dinámica, no estoy afiliado a la universidad de ninguna forma.</p>
-             <p>Si tienes alguna sugerencia, comentario, deseas que incluya más carreras, o encontraste un error tanto en la informacion de la carrera como en la pagina, no dudes en contactarme!</p>
-             <p>Mi correo es: <a href="mailto:jesusestebanchavez@gmail.com" class="text-blue-600 hover:underline">jesusestebanchavez@gmail.com</a></p>
-             <p>Muchas gracias por usar mi aplicación web!💛</p>
-         </div>
+        <div class="text-gray-600 mb-6 text-lg space-y-2">
+          <p>Bienvenido al Pensum Interactivo de la UNLP.</p>
+          <p>
+            Esta pagina es solo una herramienta para que organices tu pensum de una forma mas
+            interactiva y dinámica, no estoy afiliado a la universidad de ninguna forma.
+          </p>
+          <p>
+            Si tienes alguna sugerencia, comentario, deseas que incluya más carreras, o encontraste
+            un error tanto en la informacion de la carrera como en la pagina, no dudes en
+            contactarme!
+          </p>
+          <p>
+            Mi correo es:
+            <a href="mailto:jesusestebanchavez@gmail.com" class="text-blue-600 hover:underline"
+              >jesusestebanchavez@gmail.com</a
+            >
+          </p>
+          <p>Muchas gracias por usar mi aplicación web!💛</p>
+        </div>
 
         <div class="grid gap-6">
           <div
