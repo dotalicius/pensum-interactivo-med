@@ -25,41 +25,47 @@
         v-if="isOpen"
         class="absolute top-full left-0 mt-1 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1 max-h-80 overflow-y-auto"
       >
-        <button
-          v-for="career in careers"
-          :key="career.id"
-          @click="selectCareer(career.id)"
-          class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-150 flex items-center space-x-3"
-          :class="{
-            'bg-blue-50 border-l-2 border-blue-500': career.id === currentCareer.id,
-          }"
-        >
-          <div class="flex-1 min-w-0">
-            <p
-              class="text-sm font-medium truncate"
-              :class="career.id === currentCareer.id ? 'text-blue-700' : 'text-gray-800'"
-            >
-              {{ career.name }}
-            </p>
-            <p class="text-xs text-gray-500 truncate">
-              {{ career.faculty }}
-            </p>
+        <template v-for="(careersInFaculty, faculty) in groupedCareers" :key="faculty">
+          <!-- Separador de Facultad -->
+          <div class="px-4 py-2 bg-gray-50 border-y border-gray-100 first:border-t-0">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              {{ faculty }}
+            </h3>
           </div>
-          <!-- Indicador de carrera en desarrollo -->
-          <span
-            v-if="career.pfoStatus === 'in-development'"
-            class="flex-shrink-0 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full"
+
+          <button
+            v-for="career in careersInFaculty"
+            :key="career.id"
+            @click="selectCareer(career.id)"
+            class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-150 flex items-center space-x-3"
+            :class="{
+              'bg-blue-50 border-l-2 border-blue-500': career.id === currentCareer.id,
+            }"
           >
-            En desarrollo
-          </span>
-        </button>
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-sm font-medium truncate"
+                :class="career.id === currentCareer.id ? 'text-blue-700' : 'text-gray-800'"
+              >
+                {{ career.name }}
+              </p>
+            </div>
+            <!-- Indicador de carrera en desarrollo -->
+            <span
+              v-if="career.pfoStatus === 'in-development'"
+              class="flex-shrink-0 text-[10px] leading-tight font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full"
+            >
+              En desarrollo
+            </span>
+          </button>
+        </template>
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { GraduationCap, ChevronDown } from 'lucide-vue-next'
 import type { CareerDefinition } from '@/types'
 
@@ -68,7 +74,7 @@ interface Props {
   currentCareer: CareerDefinition
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   select: [careerId: string]
@@ -76,6 +82,17 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const selectorRef = ref<HTMLElement | null>(null)
+
+const groupedCareers = computed(() => {
+  const groups: Record<string, CareerDefinition[]> = {}
+  for (const career of props.careers) {
+    if (!groups[career.faculty]) {
+      groups[career.faculty] = []
+    }
+    groups[career.faculty].push(career)
+  }
+  return groups
+})
 
 const selectCareer = (careerId: string) => {
   emit('select', careerId)

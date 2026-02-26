@@ -4,6 +4,9 @@ import { enfermeriaUniversitaria } from './enfermeria-universitaria'
 import { licNutricion } from './lic-nutricion'
 import { licObstetricia } from './lic-obstetricia'
 import { tecPracticasCardiologicas } from './tec-practicas-cardiologicas'
+import { ingenieriaAgronomica } from './ingenieria-agronomica'
+import { ingenieriaForestal } from './ingenieria-forestal'
+import { tecCultivosProtegidos } from './tec-cultivos-protegidos'
 
 // Medicina envuelta como CareerDefinition usando los datos existentes
 const medicina: CareerDefinition = {
@@ -16,13 +19,15 @@ const medicina: CareerDefinition = {
   pfoStatus: 'active',
 }
 
-// Registro de todas las carreras disponibles
 export const allCareers: CareerDefinition[] = [
   medicina,
   enfermeriaUniversitaria,
   licNutricion,
   licObstetricia,
   tecPracticasCardiologicas,
+  ingenieriaAgronomica,
+  ingenieriaForestal,
+  tecCultivosProtegidos,
 ]
 
 // Carrera por defecto
