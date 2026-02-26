@@ -7,6 +7,8 @@ import { tecPracticasCardiologicas } from './tec-practicas-cardiologicas'
 import { ingenieriaAgronomica } from './ingenieria-agronomica'
 import { ingenieriaForestal } from './ingenieria-forestal'
 import { tecCultivosProtegidos } from './tec-cultivos-protegidos'
+import { medicinaVeterinaria } from './medicina-veterinaria'
+import { licMicrobiologia } from './lic-microbiologia'
 
 // Medicina envuelta como CareerDefinition usando los datos existentes
 const medicina: CareerDefinition = {
@@ -28,6 +30,8 @@ export const allCareers: CareerDefinition[] = [
   ingenieriaAgronomica,
   ingenieriaForestal,
   tecCultivosProtegidos,
+  medicinaVeterinaria,
+  licMicrobiologia,
 ]
 
 // Carrera por defecto
