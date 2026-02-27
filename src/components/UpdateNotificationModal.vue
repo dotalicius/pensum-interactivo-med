@@ -22,16 +22,29 @@
         <!-- Body -->
         <div class="p-5 space-y-4 overflow-y-auto">
           <p class="text-sm text-gray-700">
-            ¡Hola! He agregado <strong>cuatro nuevas carreras</strong> al Pensum Interactivo
-            correspondientes a la Facultad de Ciencias Médicas:
+            ¡Hola! He agregado <strong>cinco nuevas carreras</strong> al Pensum Interactivo
+            correspondientes a dos nuevas facultades:
           </p>
 
-          <ul class="list-disc list-inside text-sm text-gray-700 font-medium space-y-1 ml-2">
-            <li>Licenciatura en Nutrición</li>
-            <li>Licenciatura en Obstetricia</li>
-            <li>Prácticas Cardiológicas</li>
-            <li>Enfermería Universitaria</li>
-          </ul>
+          <div class="space-y-3 mt-2">
+            <div>
+              <p class="text-sm font-semibold text-gray-800">Fac. de Ciencias Veterinarias:</p>
+              <ul class="list-disc list-inside text-sm text-gray-700 font-medium space-y-1 ml-2">
+                <li>Medicina Veterinaria</li>
+                <li>Licenciatura en Microbiología</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">
+                Fac. de Ciencias Agrarias y Forestales:
+              </p>
+              <ul class="list-disc list-inside text-sm text-gray-700 font-medium space-y-1 ml-2">
+                <li>Ingeniería Agronómica</li>
+                <li>Ingeniería Forestal</li>
+                <li>Tecnicatura en Cultivos Protegidos</li>
+              </ul>
+            </div>
+          </div>
 
           <!-- Bug warning -->
           <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r mt-4">
@@ -42,26 +55,6 @@
                 podrías encontrar algún <strong>bug</strong> o error en las materias y/o
                 correlatividades.
               </p>
-            </div>
-          </div>
-
-          <!-- Upcoming careers -->
-          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r mt-4">
-            <div class="flex">
-              <Rocket class="w-6 h-6 text-indigo-500 mr-3 flex-shrink-0 mt-0.5" />
-              <div class="text-sm text-indigo-800">
-                <strong>¡Próximamente!</strong> Muy pronto estaré agregando las carreras de:
-                <ul class="list-disc list-inside mt-2 ml-1 space-y-1">
-                  <li>
-                    <strong>Fac. de Ciencias Veterinarias:</strong> Medicina Veterinaria y Lic. en
-                    Microbiología.
-                  </li>
-                  <li>
-                    <strong>Fac. de Ciencias Agrarias y Forestales:</strong> Ing. Agronómica, Ing.
-                    Forestal y Tec. en Cultivos Protegidos.
-                  </li>
-                </ul>
-              </div>
             </div>
           </div>
 
@@ -118,13 +111,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Sparkles, X, AlertTriangle, MessageCircle, Rocket } from 'lucide-vue-next'
+import { Sparkles, X, AlertTriangle, MessageCircle } from 'lucide-vue-next'
 
 const isOpen = ref(false)
 
 onMounted(() => {
   // Verificamos si hay una fecha guardada de la última vez que se vio el modal
-  const lastSeenStr = localStorage.getItem('seen_carreras_update_v1_date')
+  const lastSeenStr = localStorage.getItem('seen_carreras_update_v2_date')
 
   if (!lastSeenStr) {
     // Si no existe, es la primera vez que lo ve
@@ -154,7 +147,7 @@ const showModalWithDelay = () => {
 const closeModal = () => {
   isOpen.value = false
   // Al cerrar, guardar la fecha y hora actual (en milisegundos)
-  localStorage.setItem('seen_carreras_update_v1_date', Date.now().toString())
+  localStorage.setItem('seen_carreras_update_v2_date', Date.now().toString())
 }
 </script>
 
